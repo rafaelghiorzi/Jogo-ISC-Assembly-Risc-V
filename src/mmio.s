@@ -18,8 +18,7 @@ TECLA:		li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
 	
 FIM:		ret				# retorna
 
-CHAR_ESQ:	call ANDAR
-		la t1, position
+CHAR_ESQ:	la t1, position
 		li t2, 2
 		sw t2, (t1)
 
