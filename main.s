@@ -1,3 +1,5 @@
+.include "MACROSv21.s"
+
 .data
 CHAR_POS:	.half 0,0			# x, y
 OLD_CHAR_POS:	.half 0,0			# x, y
@@ -55,6 +57,7 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "src/mmio.s"
 .include "src/print.s"
 .include "src/sounds.s"
+.include "SYSTEMv21.s"
 
 .data
 
@@ -68,3 +71,7 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "sprites/menu.data"
 .include "sprites/footsteps.data"
 .include "sprites/fundo.data"
+.include "sprites/inimigos/grinch.data"
+.include "sprites/inimigos/gremlin.data"
+.include "sprites/coletaveis/sock.data"
+.include "sprites/coletaveis/candy.data"
