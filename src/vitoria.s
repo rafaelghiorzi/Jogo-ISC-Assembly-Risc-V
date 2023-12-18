@@ -1,11 +1,19 @@
 VITORIA:
-la a0,vitoria 			# endere�o do menu para printar
+la a0,vitoria 			# endereço do menu para printar
 li a1,0				# x = 0
 li a2,0				# y = 0
 li a3,0				# frame = 0
 call PRINT
 li a3,1
 call PRINT
+
+
+li a7,31
+li a0, 60
+li a1, 500	# AQUI É BOM CHAMAR UMA FUNÇAO PRA TOCAR MUSIQUINHA
+li a2, 98
+li a3, 50
+ecall
 
 OUTRO_LOOP:
 	call SAIDA
