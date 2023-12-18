@@ -16,7 +16,7 @@ TECLA:		li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
 		li t0,'d'
 		beq t2,t0,DIREITA		# se tecla pressionada for 'd', chama CIMA
 	
-FIM:		ret				# retorna
+FIM:		j GAME_LOOP_RET				# retorna
 
 ESQUERDA:	la t1, position
 		li t2, 2
@@ -103,7 +103,7 @@ COLLIDEX:
 		j FIM
 		
 SAVEPOSX:	sh t1,0(t0)			# salva
-		ret
+		j FIM
 		
 COLLIDEY:
 		la t5, nivel1			# endereço do primeiro byte do mapa
@@ -131,14 +131,26 @@ COLLIDEY:
 		j FIM
 		
 SAVEPOSY:	sh t1,2(t0)			# salva
-		ret
+		j FIM
 		
 COLETAVEISX: #s2 é a quantidade de coletaveis, logo a pontuação
 	addi s2,s2, 1
-	j SAVEPOSX
+	
+	li t6,0		
+	sb t6,0(t5)				#apaga a existencia desse coletavel
+	
+	call PRINT_PONTOSX
+	
+	#beq s2,s3 PROXIMA_FASE
 	
 COLETAVEISY: #s2 é a quantidade de coletaveis, logo a pontuação
 	addi s2,s2, 1
-	j SAVEPOSY
 	
+	li t6,0
+	sb t6,0(t5)	
 	
+	call PRINT_PONTOSY
+
+	#beq s2,s3, PROXIMA_FASE
+
+

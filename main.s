@@ -30,10 +30,17 @@ SETUP_NIVEL1:	li s3, 6			# total de coletaveis em todos os niveis
 		call PRINT			# imprime as informações do primeiro nível
 		li a3,1
 		call PRINT
+		la a0, zeropontos
+		li a1, 240
+		li a2, 80			# imprime a pontuacao zerada
+		li a3, 0
+		call PRINT
+		li a3, 1
+		call PRINT
 		# esse setup serve pra desenhar o "fundo" nos dois frames antes do "jogo" comecar
 
 GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
-		
+GAME_LOOP_RET:	
 		xori s0,s0,1			# inverte o valor frame atual (somente o registrador)
 		
 		la t0,CHAR_POS			# carrega em t0 o endereco de CHAR_POS
@@ -76,6 +83,8 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "src/mmio.s"
 .include "src/print.s"
 .include "src/sounds.s"
+.include "src/pontuacaoy.s"
+.include "src/pontuacaox.s"
 .include "SYSTEMv21.s"
 
 .data
@@ -97,3 +106,15 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "sprites/inimigos/gremlin.data"
 .include "sprites/coletaveis/sock.data"
 .include "sprites/coletaveis/candy.data"
+
+# sprites de pontos #
+.include "sprites/pontos/0kpontos.data"
+.include "sprites/pontos/1kpontos.data"
+.include "sprites/pontos/2kpontos.data"
+.include "sprites/pontos/3kpontos.data"
+.include "sprites/pontos/4kpontos.data"
+.include "sprites/pontos/5kpontos.data"
+.include "sprites/pontos/6kpontos.data"
+.include "sprites/pontos/7kpontos.data"
+.include "sprites/pontos/8kpontos.data"
+
