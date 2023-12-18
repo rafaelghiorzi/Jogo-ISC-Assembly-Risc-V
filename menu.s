@@ -1,5 +1,5 @@
 .text
-
+MENU:
 la a0,menu 			# endereço do menu para printar
 li a1,0				# x = 0
 li a2,0				# y = 0
@@ -7,9 +7,9 @@ li a3,0				# frame = 0
 call PRINT
 call MUSICA
 
-MENU:
+MENU_LOOP:
 	call ENTRADA
-	j MENU
+	j MENU_LOOP
 	
 ENTRADA:
 	li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
@@ -19,7 +19,7 @@ ENTRADA:
   	lw t2,4(t1)  			# le o valor da tecla tecla
 		
 	li t0,' '
-	beq t2,t0,SETUP			# se tecla pressionada for 'space', vai para o SETUP do main
+	beq t2,t0,SETUP_NIVEL1			# se tecla pressionada for 'space', vai para o SETUP do main
 		
 	li t0,'2'
 	beq t2,t0,EXIT			# se tecla pressionada for '2', sai do programa

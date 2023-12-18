@@ -78,27 +78,27 @@ BAIXO:		la t1, position
 		j COLLIDEY
 		
 COLLIDEX: 	
-		la t5, nivel1			# endere√ßo do primeiro byte do mapa
+		la t5, nivel1			# endereÁo do primeiro byte do mapa
 		li t3, 16			# t3 = 16	
-		divu t3, t1, t3			# t3 = x/16 endere√ßo real x no mapa
-		add t5, t5, t3			# endere√ßo mapa + posi√ß√£o x
+		divu t3, t1, t3			# t3 = x/16 endereÁo real x no mapa
+		add t5, t5, t3			# endereÁo mapa + posiÁ„o x
 		li t3, 16
 		lh t4, 2(t0)			# t4 = y do personagem
-		divu t4, t4, t3			# t4 = y/16 endere√ßo real y no mapa
+		divu t4, t4, t3			# t4 = y/16 endereÁo real y no mapa
 		li t3, 20			# t3 = 20
 		mul t4, t4, t3			# t4 = t4 * 20
-		add t5, t5, t4			# endere√ßo do mapa + posi√ß√£o y real
-		lbu t4, (t5)			# t4 = byte da posi√ß√£o do personagem
+		add t5, t5, t4			# endereÁo do mapa + posiÁ„o y real
+		lbu t4, (t5)			# t4 = byte da posiÁ„o do personagem
 		
-		# testar as op√ßoes
+		# testar as opÁoes
 		li t6,0
-		beq t4,t6, SAVEPOSX		# se o byte n√£o for 0 n√£o pode andar, sai        se o byte for 0, pode andar
+		beq t4,t6, SAVEPOSX		# se o byte n„o for 0 n„o pode andar, sai        se o byte for 0, pode andar
 		
 		li t6,1
-		beq t4, t6, FIM			# se o byte for igual a 1 n√£o pode andar, sai sem salvar a half
+		beq t4, t6, FIM			# se o byte for igual a 1 n„o pode andar, sai sem salvar a half
 		
 		li t6,2
-		beq t4, t6, COLETAVEISX		# se o byte for igual a 2 √© um coletavel, pega, aumenta a pontua√ß√£o e anda
+		beq t4, t6, COLETAVEISX		# se o byte for igual a 2 È um coletavel, pega, aumenta a pontuaÁ„o e anda
 		
 		j FIM
 		
@@ -106,40 +106,39 @@ SAVEPOSX:	sh t1,0(t0)			# salva
 		ret
 		
 COLLIDEY:
-		la t5, nivel1			# endere√ßo do primeiro byte do mapa
+		la t5, nivel1			# endereÁo do primeiro byte do mapa
 		li t3, 16			# t3 = 16
 		divu t4, t1, t3			# t4 = y/16
 		li t3, 20			# t3 = 20	
 		mul t4, t4, t3			# t4 = t4 * 20 y no mapa level
-		add t5, t5, t4			# endere√ßo do primeiro byte do mapa + y 
+		add t5, t5, t4			# endereÁo do primeiro byte do mapa + y 
 		li t3, 16			# t3 = 16
 		lh t4, 0(t0)			# t4 = x (char_pos)	
 		divu t4, t4, t3			# t4 = x/16
-		add t5, t5, t4			# endere√ßo do mapa + x	
-		lbu t4, (t5)			# t4 = byte da posi√ß√£o do personagem
+		add t5, t5, t4			# endereÁo do mapa + x	
+		lbu t4, (t5)			# t4 = byte da posiÁ„o do personagem
 		
-		# testar as op√ßoes
+		# testar as opÁoes
 		li t6,0
-		beq t4,t6, SAVEPOSY		# se o byte n√£o for 0 n√£o pode andar, sai        se o byte for 0, pode andar
+		beq t4,t6, SAVEPOSY		# se o byte n„o for 0 n„o pode andar, sai        se o byte for 0, pode andar
 		
 		li t6,1
-		beq t4, t6, FIM			# se o byte for igual a 1 n√£o pode andar, sai sem salvar a half
+		beq t4, t6, FIM			# se o byte for igual a 1 n„o pode andar, sai sem salvar a half
 		
 		li t6,2
-		beq t4, t6, COLETAVEISY		# se o byte for igual a 2 √© um coletavel, pega, aumenta a pontua√ß√£o e anda
+		beq t4, t6, COLETAVEISY		# se o byte for igual a 2 È um coletavel, pega, aumenta a pontuaÁ„o e anda
 		
 		j FIM
 		
 SAVEPOSY:	sh t1,2(t0)			# salva
 		ret
 		
-COLETAVEISX: #s2 √© a quantidade de coletaveis, logo a pontua√ß√£o
+COLETAVEISX: #s2 È a quantidade de coletaveis, logo a pontuaÁ„o
 	addi s2,s2, 1
 	j SAVEPOSX
 	
-COLETAVEISY: #s2 √© a quantidade de coletaveis, logo a pontua√ß√£o
+COLETAVEISY: #s2 È a quantidade de coletaveis, logo a pontuaÁ„o
 	addi s2,s2, 1
 	j SAVEPOSY
 	
 	
-
