@@ -15,8 +15,11 @@ TECLA:		li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
 		
 		li t0,'d'
 		beq t2,t0,DIREITA		# se tecla pressionada for 'd', chama CIMA
-	
-FIM:		j GAME_LOOP_RET				# retorna
+		
+		li t0,'6'			# cheat pra acelerar o processo de mostrar o jogo
+		beq t2,t0,PROXIMA_FASE
+		
+FIM:		ret				# retorna
 
 ESQUERDA:	la t1, position
 		li t2, 2
@@ -78,7 +81,7 @@ BAIXO:		la t1, position
 		j COLLIDEY
 		
 COLLIDEX: 	
-		la t5, nivel1			# endereço do primeiro byte do mapa
+		mv t5, s4			# endereço do primeiro byte do mapa
 		li t3, 16			# t3 = 16	
 		divu t3, t1, t3			# t3 = x/16 endereço real x no mapa
 		add t5, t5, t3			# endereço mapa + posição x
@@ -103,10 +106,10 @@ COLLIDEX:
 		j FIM
 		
 SAVEPOSX:	sh t1,0(t0)			# salva
-		j FIM
+		ret
 		
 COLLIDEY:
-		la t5, nivel1			# endereço do primeiro byte do mapa
+		mv t5, s4			# endereço do primeiro byte do mapa
 		li t3, 16			# t3 = 16
 		divu t4, t1, t3			# t4 = y/16
 		li t3, 20			# t3 = 20	
@@ -131,26 +134,31 @@ COLLIDEY:
 		j FIM
 		
 SAVEPOSY:	sh t1,2(t0)			# salva
-		j FIM
+		ret
 		
-COLETAVEISX: #s2 é a quantidade de coletaveis, logo a pontuação
+COLETAVEISX: #s2 ? a quantidade de coletaveis, logo a pontua??o
 	addi s2,s2, 1
+	sb zero,0(t5)
+	beq s2,s3, PROXIMA_FASE		# condição de vitória do jogador, passa pra proxima fase ou finaliza o jogo
+	j SAVEPOSX
 	
-	li t6,0		
-	sb t6,0(t5)				#apaga a existencia desse coletavel
-	
-	call PRINT_PONTOSX
-	
-	#beq s2,s3 PROXIMA_FASE
-	
-COLETAVEISY: #s2 é a quantidade de coletaveis, logo a pontuação
+COLETAVEISY: #s2 ? a quantidade de coletaveis, logo a pontua??o
 	addi s2,s2, 1
+	sb zero,0(t5)
+	beq s2,s3, PROXIMA_FASE
+	j SAVEPOSY
 	
-	li t6,0
-	sb t6,0(t5)	
-	
-	call PRINT_PONTOSY
-
-	#beq s2,s3, PROXIMA_FASE
+PROXIMA_FASE:	li a7 32
+		li a0, 300	# espera um pouco antes de pular pra próxima fase ou para a vitoria
+		ecall
+		
+		li s2, 0
+		
+		li t6, 0
+		beq s5, t6, SETUP_NIVEL2
+		
+		li t6, 1
+		beq s5,t6, VITORIA
+		
 
 
