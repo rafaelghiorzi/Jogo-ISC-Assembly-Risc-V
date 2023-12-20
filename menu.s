@@ -19,7 +19,7 @@ ENTRADA:
   	lw t2,4(t1)  			# le o valor da tecla tecla
 		
 	li t0,' '
-	beq t2,t0,SETUP_NIVEL1			# se tecla pressionada for 'space', vai para o SETUP do main
+	beq t2,t0,SETUP_NIVEL1		# se tecla pressionada for 'space', vai para o SETUP do main
 		
 	li t0,'2'
 	beq t2,t0,EXIT			# se tecla pressionada for '2', sai do programa

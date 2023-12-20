@@ -3,9 +3,15 @@
 .data
 .include "src/print_pontos.s"
 
+####### JOGADOR ############
 CHAR_POS:	.half 96,96			# x, y
 OLD_CHAR_POS:	.half 96,96			# x, y
+###########################
 
+###### INIMIGO ############
+INI_POS:	.half 80,64
+OLD_INI_POS:	.half 80,64
+###########################
 
 ########### INFORMAÇÕES
 # s2 e s3 = contador de coletaveis e meta de coletaveis, respectivamente
@@ -21,6 +27,10 @@ SETUP_NIVEL1:	li s3, 8			# total de coletaveis em todos os niveis
 		li s2, 0			# reinicia os coletaveis
 		la s4, nivel1			# carrega as informações do nivel 1
 		li s5, 0			# nivel 0 (no caso nivel 1)
+		li s6, 96
+		li s7, 96
+		li s8, 80
+		li s9, 64
 		
 		la a0,fundo			# carrega o endereco do sprite 'fundo' em a0
 		li a1,0				# x = 0
@@ -49,19 +59,11 @@ SETUP_NIVEL1:	li s3, 8			# total de coletaveis em todos os niveis
 SETUP_NIVEL2:	li s2, 0	# reinicia a contagem de coletaveis
 		la s4, nivel2
 		li s5,1		# nivel 1 (no caso nivel 2)
-		
-		li t6, 96              # Carrega o valor 96 para t6
-		
-		# Modifica o valor em CHAR_POS
-		la t0, CHAR_POS        # Carrega o endereço de CHAR_POS em t0
-		sh t6, 0(t0)           # Armazena o valor 96 no primeiro half-word de CHAR_POS
-		sh t6, 2(t0)           # Armazena o valor 96 no segundo half-word de CHAR_POS
-		
-		# Modifica o valor em OLD_CHAR_POS
-		la t0, OLD_CHAR_POS    # Carrega o endereço de OLD_CHAR_POS em t0
-		sh t6, 0(t0)           # Armazena o valor 96 no primeiro half-word de OLD_CHAR_POS
-		sh t6, 2(t0)           # Armazena o valor 96 no segundo half-word de OLD_CHAR_POS
-		
+
+		li s6, 96
+		li s7, 96
+		li s8, 80
+		li s9, 64
 		
 		la a0,fundo			# carrega o endereco do sprite 'fundo' em a0
 		li a1,0				# x = 0
@@ -83,20 +85,47 @@ SETUP_NIVEL2:	li s2, 0	# reinicia a contagem de coletaveis
 		li a3, 1
 		call PRINT
 		
+		
+		li t6, 96              # Carrega o valor 96 para t6
+		# Modifica o valor em CHAR_POS
+		la t0, CHAR_POS        # Carrega o endereço de CHAR_POS em t0
+		sh t6, 0(t0)           # Armazena o valor 96 no primeiro half-word de CHAR_POS
+		sh t6, 2(t0)           # Armazena o valor 96 no segundo half-word de CHAR_POS
+		
+		# Modifica o valor em OLD_CHAR_POS
+		la t0, OLD_CHAR_POS    # Carrega o endereço de OLD_CHAR_POS em t0
+		sh t6, 0(t0)           # Armazena o valor 96 no primeiro half-word de OLD_CHAR_POS
+		sh t6, 2(t0)           # Armazena o valor 96 no segundo half-word de OLD_CHAR_POS
+		
+		
 		j GAME_LOOP
 		
 GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
+		call INIMIGO
+		
 		PRINT_PONTOS()
 		xori s0,s0,1			# inverte o valor frame atual (somente o registrador)
 		
 		la t0,CHAR_POS			# carrega em t0 o endereco de CHAR_POS
 		
+		
+		# PRINTA O JOGADOR NA TELA #
 		lw t2, position		
 		li t3, 4			
 		mul t2,t2,t3			# endereco do playerstate
 		la t1,player_position		# tipos de movimentaçao personagem
 		add t1,t1,t2			# t1 = sprite a ser impresso
 		lw a0, 0(t1)			# carrega t1 (endereco do sprite) em a0
+		lh a1,0(t0)			# carrega a posicao x do personagem em a1
+		lh a2,2(t0)			# carrega a posicao y do personagem em a2
+		mv a3,s0			# carrega o valor do frame em a3
+		call PRINT			# imprime o sprite
+		
+		
+		# PRINTA O INIMIGO QUE ANDA NA TELA #
+		la t0,INI_POS			# carrega em t0 o endereco de CHAR_POS
+		
+		la a0,grinch			# carrega o endereco do sprite 'char' em a0
 		lh a1,0(t0)			# carrega a posicao x do personagem em a1
 		lh a2,2(t0)			# carrega a posicao y do personagem em a2
 		mv a3,s0			# carrega o valor do frame em a3
@@ -119,13 +148,22 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 		call PRINT			# imprime
 		xori a3,a3,0
 		call PRINT
+		
+		la t0,OLD_INI_POS		# carrega em t0 o endereco de OLD_CHAR_POS
+		
+		la a0,footsteps			# carrega o endereco do sprite 'footsteps' em a0
+		lh a1,0(t0)			# carrega a posicao x antiga do personagem em a1
+		lh a2,2(t0)			# carrega a posicao y antiga do personagem em a2
+		
+		mv a3,s0			# carrega o frame atual (que esta na tela em a3)
+		xori a3,a3,1			# inverte a3 (0 vira 1, 1 vira 0)
+		call PRINT			# imprime
+		xori a3,a3,0
+		call PRINT
 
 		j GAME_LOOP			# continua o loop
 
-#VITORIA: j MENU #temporario, precisa de uma tela de vitória
-
-	
-
+.include "src/inimigo.s"
 .include "src/mmio.s"
 .include "src/print.s"
 .include "src/sounds.s"
@@ -154,6 +192,7 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "sprites/inimigos/gremlin.data"
 .include "sprites/coletaveis/sock.data"
 .include "sprites/coletaveis/candy.data"
+.include "sprites/derrota.data"
 
 # sprites de pontos #
 .include "sprites/pontos/0kpontos.data"

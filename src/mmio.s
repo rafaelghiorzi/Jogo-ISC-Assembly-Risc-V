@@ -109,59 +109,70 @@ BAIXO:			li a7,31
 		j COLLIDEY
 		
 COLLIDEX: 	
-		mv t5, s4			# endere√ßo do primeiro byte do mapa
+		mv t5, s4			# endereÁo do primeiro byte do mapa
 		li t3, 16			# t3 = 16	
-		divu t3, t1, t3			# t3 = x/16 endere√ßo real x no mapa
-		add t5, t5, t3			# endere√ßo mapa + posi√ß√£o x
+		divu t3, t1, t3			# t3 = x/16 endereÁo real x no mapa
+		add t5, t5, t3			# endereÁo mapa + posiÁ„o x
 		li t3, 16
 		lh t4, 2(t0)			# t4 = y do personagem
-		divu t4, t4, t3			# t4 = y/16 endere√ßo real y no mapa
+		divu t4, t4, t3			# t4 = y/16 endereÁo real y no mapa
 		li t3, 20			# t3 = 20
 		mul t4, t4, t3			# t4 = t4 * 20
-		add t5, t5, t4			# endere√ßo do mapa + posi√ß√£o y real
-		lbu t4, (t5)			# t4 = byte da posi√ß√£o do personagem
+		add t5, t5, t4			# endereÁo do mapa + posiÁ„o y real
+		lbu t4, (t5)			# t4 = byte da posiÁ„o do personagem
 		
-		# testar as op√ßoes
+		# testar as opÁoes
 		li t6,0
-		beq t4,t6, SAVEPOSX		# se o byte n√£o for 0 n√£o pode andar, sai        se o byte for 0, pode andar
+		beq t4,t6, SAVEPOSX		# se o byte n„o for 0 n„o pode andar, sai        se o byte for 0, pode andar
 		
 		li t6,1
-		beq t4, t6, FIM			# se o byte for igual a 1 n√£o pode andar, sai sem salvar a half
+		beq t4, t6, FIM			# se o byte for igual a 1 n„o pode andar, sai sem salvar a half
 		
 		li t6,2
-		beq t4, t6, COLETAVEISX		# se o byte for igual a 2 √© um coletavel, pega, aumenta a pontua√ß√£o e anda
+		beq t4, t6, COLETAVEISX		# se o byte for igual a 2 È um coletavel, pega, aumenta a pontuaÁ„o e anda
+		
+		li t6, 5			# se o byte for igual a 5 È um inimigo, perde o jogo
+		beq t4,t6, DERROTA
+		
 		
 		j FIM
 		
 SAVEPOSX:	sh t1,0(t0)			# salva
+    		mv s6, t1       # salva a posiÁ„o X em s6		
+		beq s6, s8, CHECAY
 		ret
 		
 COLLIDEY:
-		mv t5, s4			# endere√ßo do primeiro byte do mapa
+		mv t5, s4			# endereÁo do primeiro byte do mapa
 		li t3, 16			# t3 = 16
 		divu t4, t1, t3			# t4 = y/16
 		li t3, 20			# t3 = 20	
 		mul t4, t4, t3			# t4 = t4 * 20 y no mapa level
-		add t5, t5, t4			# endere√ßo do primeiro byte do mapa + y 
+		add t5, t5, t4			# endereÁo do primeiro byte do mapa + y 
 		li t3, 16			# t3 = 16
 		lh t4, 0(t0)			# t4 = x (char_pos)	
 		divu t4, t4, t3			# t4 = x/16
-		add t5, t5, t4			# endere√ßo do mapa + x	
-		lbu t4, (t5)			# t4 = byte da posi√ß√£o do personagem
+		add t5, t5, t4			# endereÁo do mapa + x	
+		lbu t4, (t5)			# t4 = byte da posiÁ„o do personagem
 		
-		# testar as op√ßoes
+		# testar as opÁoes
 		li t6,0
-		beq t4,t6, SAVEPOSY		# se o byte n√£o for 0 n√£o pode andar, sai        se o byte for 0, pode andar
+		beq t4,t6, SAVEPOSY		# se o byte n„o for 0 n„o pode andar, sai        se o byte for 0, pode andar
 		
 		li t6,1
-		beq t4, t6, FIM			# se o byte for igual a 1 n√£o pode andar, sai sem salvar a half
+		beq t4, t6, FIM			# se o byte for igual a 1 n„o pode andar, sai sem salvar a half
 		
 		li t6,2
-		beq t4, t6, COLETAVEISY		# se o byte for igual a 2 √© um coletavel, pega, aumenta a pontua√ß√£o e anda
+		beq t4, t6, COLETAVEISY		# se o byte for igual a 2 È um coletavel, pega, aumenta a pontuaÁ„o e anda
+		
+		li t6, 5			# se o byte for igual a 5 È um inimigo, perde o jogo
+		beq t4,t6, DERROTA
 		
 		j FIM
 		
 SAVEPOSY:	sh t1,2(t0)			# salva
+    		mv s7, t1       # salva a posiÁ„o Y em s7
+		beq s6, s8, CHECAY
 		ret
 		
 COLETAVEISX: #s2 ? a quantidade de coletaveis, logo a pontua??o
@@ -173,7 +184,7 @@ COLETAVEISX: #s2 ? a quantidade de coletaveis, logo a pontua??o
 			ecall
 	addi s2,s2, 1
 	sb zero,0(t5)
-	beq s2,s3, PROXIMA_FASE		# condi√ß√£o de vit√≥ria do jogador, passa pra proxima fase ou finaliza o jogo
+	beq s2,s3, PROXIMA_FASE		# condiÁ„o de vitÛria do jogador, passa pra proxima fase ou finaliza o jogo
 	j SAVEPOSX
 	
 COLETAVEISY: #s2 ? a quantidade de coletaveis, logo a pontua??o
@@ -189,7 +200,7 @@ COLETAVEISY: #s2 ? a quantidade de coletaveis, logo a pontua??o
 	j SAVEPOSY
 	
 PROXIMA_FASE:	li a7 32
-		li a0, 300	# espera um pouco antes de pular pra pr√≥xima fase ou para a vitoria
+		li a0, 300	# espera um pouco antes de pular pra prÛxima fase ou para a vitoria
 		ecall
 		
 		li s2, 0
@@ -200,5 +211,3 @@ PROXIMA_FASE:	li a7 32
 		li t6, 1
 		beq s5,t6, VITORIA
 		
-
-

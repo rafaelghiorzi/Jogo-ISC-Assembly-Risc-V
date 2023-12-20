@@ -33,4 +33,3 @@ FIM_MUSICA:
 	li s1, 0
 	# reseta as variáveis e continua a vida
 	ret
-

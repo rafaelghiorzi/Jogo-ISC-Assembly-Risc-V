@@ -1,5 +1,5 @@
 VITORIA:
-la a0,vitoria 			# endereÃ§o do menu para printar
+la a0,vitoria 			# endereço do menu para printar
 li a1,0				# x = 0
 li a2,0				# y = 0
 li a3,0				# frame = 0
@@ -7,15 +7,37 @@ call PRINT
 li a3,1
 call PRINT
 
+# hamar uma música?
 
-li a7,31
-li a0, 60
-li a1, 500	# AQUI Ã‰ BOM CHAMAR UMA FUNÃ‡AO PRA TOCAR MUSIQUINHA
-li a2, 98
-li a3, 50
-ecall
+j OUTRO_LOOP
+
+DERROTA:
+			li a7,31
+			li a0, 60
+			li a1, 300		# som de derrota
+			li a2, 128
+			li a3, 50
+			ecall
+		
+			li a7, 32		# time sleep
+			li a0, 200
+
+
+la a0,derrota 			# endereço do menu para printar
+li a1,0				# x = 0
+li a2,0				# y = 0
+li a3,0				# frame = 0
+call PRINT
+li a3,1
+call PRINT
+
+# chamar uma música?
+
+j OUTRO_LOOP
 
 OUTRO_LOOP:
+
+	
 	call SAIDA
 	j OUTRO_LOOP
 	
@@ -27,10 +49,7 @@ SAIDA:
   	lw t2,4(t1)  			# le o valor da tecla tecla
 		
 	li t0,' '
-	beq t2,t0,EXIT			# se tecla pressionada for 'space', vai para o SETUP do main
-		
-	li t0,'2'
-	beq t2,t0,EXIT			# se tecla pressionada for '2', sai do programa
+	beq t2,t0,EXIT			# se tecla pressionada for 'space' SAI
 	
 FIM2:	ret				# retorna
 
