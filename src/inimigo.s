@@ -4,7 +4,7 @@ INIMIGO:
 	#####################################
 	li a7, 42               # Syscall 42 - RandIntRange
 	li a0, 0                # Índice do gerador de números pseudoaleatórios
-	li a1, 300               # Limite superior para a direção aleatória (0 a 100)
+	li a1, 5              # Limite superior para a direção aleatória (0 a 100)
 	ecall
 	mv t6, a0               # Armazena o resultado em t6 (direção aleatória)
 
@@ -14,16 +14,16 @@ INIMIGO:
 	lh t3, 2(t1)            # Carrega y do inimigo
 
 	# Atualiza a posição do inimigo de acordo com a direção
-	li t4, 4
+	li t4, 0
 	beq t6, t4, INI_CIMA
 	
-	li t4, 5
+	li t4, 1
 	beq t6, t4, INI_BAIXO
 	
-	li t4, 6
+	li t4, 2
 	beq t6, t4, INI_ESQUERDA
 	
-	li t4, 7
+	li t4, 3
 	beq t6, t4, INI_DIREITA
 	
 	ret
