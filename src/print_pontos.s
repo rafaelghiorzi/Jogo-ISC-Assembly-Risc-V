@@ -1,4 +1,4 @@
-.macro PRINT_PONTOS()	
+.macro PRINT_PONTOS()
 		
 		beq zero,s2,FIM_PONTOS
 		
@@ -114,7 +114,6 @@
 			call PRINT
 			li t6,0
 			beq t6,zero,FIM_PONTOS
-			
+
 	FIM_PONTOS:
-		
 .end_macro

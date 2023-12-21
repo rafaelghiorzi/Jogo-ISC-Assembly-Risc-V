@@ -19,6 +19,9 @@ TECLA:		li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
 		li t0,'6'			# cheat pra acelerar o processo de mostrar o jogo
 		beq t2,t0,PROXIMA_FASE
 		
+		li t0,' '			# cheat pra acelerar o processo de mostrar o jogo
+		beq t2,t0,ATAQUE
+		
 FIM:		ret				# retorna
 
 ESQUERDA:		li a7,31
@@ -107,6 +110,198 @@ BAIXO:			li a7,31
 		addi t1,t1,16			# aumenta 16 pixeis
 		
 		j COLLIDEY
+		
+ATAQUE:		la t0,position			# t0 = direcao do personagem
+		lw t0, 0(t0)
+		la t4,CHAR_POS
+		lh a4,0(t4)			# t2 = x
+		lh a5,2(t4)			# t3 = y
+		li t6,16
+		divu a4,a4,t6
+		divu a5,a5,t6
+		mv a6,s4
+		add a6,a6,a4
+		li t6,20
+		mul a5,a5,t6
+		add a6,a6,a5
+		divu a5,a5,t6
+		
+		
+		li t1,0
+		beq t0,t1,ATAQUE_BAIXO
+		
+		li t1,1
+		beq t0,t1,ATAQUE_CIMA
+		
+		li t1,2
+		beq t0,t1,ATAQUE_ESQ
+		
+		li t1,3
+		beq t0,t1,ATAQUE_DIREITA
+		
+ATAQUE_BAIXO:	lb t6,20(a6)
+		li t0,4
+		beq t6,t0,QUEBRA_BAIXO
+		bnez t6,FIM
+		li a0,4
+		sb a0,20(a6)
+		la a0,presente
+		mv a1,a4
+		li t6,16
+		mul a1,a1,t6
+		addi a5,a5,1
+		mv a2,a5
+		mul a2,a2,t6
+		li a3,0
+		PRINT_MACRO()
+		li a3,1
+		PRINT_MACRO()
+		addi a6,a6,20
+		li t6,0
+		beq t6,zero,ATAQUE_BAIXO
+		
+ATAQUE_CIMA:	lb t6,-20(a6)
+		li t0,4
+		#beq t6,t0,QUEBRA_CIMA
+		bnez t6,FIM
+		li a0,4
+		sb a0,-20(a6)
+		la a0,presente
+		mv a1,a4
+		li t6,16
+		mul a1,a1,t6
+		addi a5,a5,-1
+		mv a2,a5
+		mul a2,a2,t6
+		li a3,0
+		PRINT_MACRO()
+		li a3,1
+		PRINT_MACRO()
+		addi a6,a6,-20
+		li t6,0
+		beq t6,zero,ATAQUE_CIMA
+		
+ATAQUE_DIREITA:	lb t6,1(a6)
+		li t0,4
+		#beq t6,t0,QUEBRA_DIREITA
+		bnez t6,FIM
+		li a0,4
+		sb a0,1(a6)
+		la a0,presente
+		mv a2,a5
+		li t6,16
+		mul a2,a2,t6
+		addi a4,a4,1
+		mv a1,a4
+		mul a1,a1,t6
+		li a3,0
+		PRINT_MACRO()
+		li a3,1
+		PRINT_MACRO()
+		addi a6,a6,1
+		li t6,0
+		beq t6,zero,ATAQUE_DIREITA
+
+ATAQUE_ESQ:	lb t6,-1(a6)
+		li t0,4
+		#beq t6,t0,QUEBRA_ESQ
+		bnez t6,FIM
+		li a0,4
+		sb a0,-1(a6)
+		la a0,presente
+		mv a2,a5
+		li t6,16
+		mul a2,a2,t6
+		addi a4,a4,-1
+		mv a1,a4
+		mul a1,a1,t6
+		li a3,0
+		PRINT_MACRO()
+		li a3,1
+		PRINT_MACRO()
+		addi a6,a6,-1
+		li t6,0
+		beq t6,zero,ATAQUE_ESQ
+		
+QUEBRA_BAIXO:	lb t6,20(a6)
+		li t0,4
+		bne t6,t0,FIM
+		li a0,0
+		sb a0,20(a6)
+		la a0,fundo_quadrado
+		mv a1,a4
+		li t6,16
+		mul a1,a1,t6
+		addi a5,a5,1
+		mv a2,a5
+		mul a2,a2,t6
+		li a3,0
+		PRINT_MACRO()
+		li a3,1
+		PRINT_MACRO()
+		addi a6,a6,20
+		li t6,0
+		beq t6,zero,QUEBRA_BAIXO
+		
+#QUEBRA_CIMA:	lb t6,-20(a6)
+#		li t0,4
+#		bne t6,t0,FIM
+#		li a0,0
+#		sb a0,-20(a6)
+#		la a0,fundo_quadrado
+#		mv a1,a4
+#		li t6,16
+#		mul a1,a1,t6
+#		addi a5,a5,-1
+#		mv a2,a5
+#		mul a2,a2,t6
+#		li a3,0
+#		PRINT_MACRO()
+#		li a3,1
+#		PRINT_MACRO()
+#		addi a6,a6,-20
+#		li t6,0
+#		beq t6,zero,QUEBRA_CIMA
+		
+#QUEBRA_DIREITA:	lb t6,1(a6)
+#		li t0,4
+#		bne t6,t0,FIM
+#		li a0,0
+#		sb a0,1(a6)
+#		la a0,fundo_quadrado
+#		mv a2,a5
+#		li t6,16
+#		mul a2,a2,t6
+#		addi a4,a4,1
+#		mv a1,a4
+#		mul a1,a1,t6
+#		li a3,0
+#		PRINT_MACRO()
+#		li a3,1
+#		PRINT_MACRO()
+#		addi a6,a6,1
+#		li t6,0
+#		beq t6,zero,QUEBRA_DIREITA
+		
+#QUEBRA_ESQ:	lb t6,-1(a6)
+#		li t0,4
+#		bne t6,t0,FIM
+#		li a0,0
+#		sb a0,-1(a6)
+#		la a0,fundo_quadrado
+#		mv a2,a5
+#		li t6,16
+#		mul a2,a2,t6
+#		addi a4,a4,-1
+#		mv a1,a4
+#		mul a1,a1,t6
+#		li a3,0
+#		PRINT_MACRO()
+#		li a3,1
+#		PRINT_MACRO()
+#		addi a6,a6,-1
+#		li t6,0
+#		beq t6,zero,QUEBRA_ESQ
 		
 COLLIDEX: 	
 		mv t5, s4			# endereço do primeiro byte do mapa

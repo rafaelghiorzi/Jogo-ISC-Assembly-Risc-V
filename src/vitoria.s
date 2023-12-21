@@ -45,13 +45,13 @@ SAIDA:
 	li t1,0xFF200000		# carrega o endereco de controle do KDMMIO
 	lw t0,0(t1)			# Le bit de Controle Teclado
 	andi t0,t0,0x0001		# mascara o bit menos significativo
-   	beq t0,zero,FIM2   	   	# Se nao ha tecla pressionada entao vai para FIM
+   	beq t0,zero,FIM3   	   	# Se nao ha tecla pressionada entao vai para FIM
   	lw t2,4(t1)  			# le o valor da tecla tecla
 		
 	li t0,' '
-	beq t2,t0,EXIT			# se tecla pressionada for 'space' SAI
+	beq t2,t0,EXIT2			# se tecla pressionada for 'space' SAI
 	
-FIM2:	ret				# retorna
+FIM3:	ret				# retorna
 
-EXIT:	li a7, 10
+EXIT2:	li a7, 10
 	ecall

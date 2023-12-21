@@ -2,8 +2,9 @@
 
 .data
 .include "src/moveplayermatriz.s"
-.include "src/print_pontos.s"
 .include "src/moveinimigomatriz.s"
+.include "src/print_macro.s"
+.include "src/print_pontos.s"
 ####### JOGADOR ############
 CHAR_POS:	.half 96,96			# x, y
 OLD_CHAR_POS:	.half 96,96			# x, y
@@ -102,9 +103,11 @@ SETUP_NIVEL2:	li s2, 0	# reinicia a contagem de coletaveis
 		j GAME_LOOP
 		
 GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
+	
 		call INIMIGO
 		
 		PRINT_PONTOS()
+
 		xori s0,s0,1			# inverte o valor frame atual (somente o registrador)
 		
 		la t0,CHAR_POS			# carrega em t0 o endereco de CHAR_POS
@@ -171,6 +174,7 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "src/vitoria.s"
 .include "SYSTEMv21.s"
 
+
 .data
 
 # sprites #
@@ -194,6 +198,7 @@ GAME_LOOP:	call TECLA			# chama o procedimento de entrada do teclado
 .include "sprites/coletaveis/sock.data"
 .include "sprites/coletaveis/candy.data"
 .include "sprites/derrota.data"
+.include "sprites/fundo_quadrado.data"
 
 # sprites de pontos #
 .include "sprites/pontos/0kpontos.data"
