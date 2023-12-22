@@ -1,7 +1,12 @@
-# Bad Santa
+# Bad Santa versão alternativa
 O trabalho a seguir é uma releitura do jogo Bad Ice Cream, desenvolvido pela empresa Nitrome em Dezembro de 2010.
 O jogo foi programado na linguagem Assembly Risc-V R32 com auxílio do simulador RARS (RISC-V Assembler and Runtime Simulator).
 Criado por Rafael Ghiorzi, Guilherme Lima e Bernardo Vilar
+
+# Nota da versão alternativa
+O trabalho final foi completamente baseado em macros e matrizes para funcionar, porém antes de conseguirmos consertar os bugs, 
+estávamos desenvolvendo uma versão alternativa em que a colisão do personagem e do inimigo era feito de uma forma completamente
+diferente, porém às custas da não implementação das barreiras de presentes. Se quiserem dar uma olhada, sintam-se à vontade!
 
 # Nota para os alunos da disciplina Introdução a Sistemas Computacionais
 O código contido nesse repositório pode ser e deve ser usado como inspiração para os futuros projetos relacionados a essa disciplina.
