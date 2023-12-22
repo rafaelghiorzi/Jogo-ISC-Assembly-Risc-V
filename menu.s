@@ -1,8 +1,8 @@
 .text
 MENU:
 la a0,menu 			# endereço do menu para printar
-li a1,16			# x = 0
-li a2,16			# y = 0
+li a1,0			# x = 0
+li a2,0			# y = 0
 li a3,0				# frame = 0
 call PRINT
 call MUSICA

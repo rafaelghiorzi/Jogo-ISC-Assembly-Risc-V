@@ -1,29 +1,29 @@
 INIMIGO:
 	#####################################
-	# LÛgica de movimento aleatÛrio     #
+	# L√≥gica de movimento aleat√≥rio     #
 	#####################################
 	li a7, 42               # Syscall 42 - RandIntRange
-	li a0, 0                # Õndice do gerador de n˙meros pseudoaleatÛrios
-	li a1, 800               # Limite superior para a direÁ„o aleatÛria (0 a 100)
+	li a0, 0                # √çndice do gerador de n√∫meros pseudoaleat√≥rios
+	li a1, 5              # Limite superior para a dire√ß√£o aleat√≥ria (0 a 100)
 	ecall
-	mv t6, a0               # Armazena o resultado em t6 (direÁ„o aleatÛria)
+	mv t6, a0               # Armazena o resultado em t6 (dire√ß√£o aleat√≥ria)
 
-	# Movimenta o inimigo de acordo com a direÁ„o
+	# Movimenta o inimigo de acordo com a dire√ß√£o
 	la t1, INI_POS
 	lh t2, 0(t1)            # Carrega x do inimigo
 	lh t3, 2(t1)            # Carrega y do inimigo
 
-	# Atualiza a posiÁ„o do inimigo de acordo com a direÁ„o
-	li t4, 4
+	# Atualiza a posi√ß√£o do inimigo de acordo com a dire√ß√£o
+	li t4, 0
 	beq t6, t4, INI_CIMA
 	
-	li t4, 5
+	li t4, 1
 	beq t6, t4, INI_BAIXO
 	
-	li t4, 6
+	li t4, 2
 	beq t6, t4, INI_ESQUERDA
 	
-	li t4, 7
+	li t4, 3
 	beq t6, t4, INI_DIREITA
 	
 	ret
@@ -35,7 +35,7 @@ INI_ESQUERDA:		li a7,31
 			li a2, 121
 			li a3, 50
 			ecall
-			
+		li a0, 6	
 		la t0,INI_POS			# carrega em t0 o endereco de INI_POS
 		la t1,OLD_INI_POS		# carrega em t1 o endereco de OLD_INI_POS
 		lw t2,0(t0)
@@ -53,7 +53,7 @@ INI_DIREITA:		li a7,31
 			li a2, 121
 			li a3, 50
 			ecall
-
+		li a0, 7
 		la t0,INI_POS			# carrega em t0 o endereco de INI_POS
 		la t1,OLD_INI_POS		# carrega em t1 o endereco de OLD_INI_POS
 		lw t2,0(t0)
@@ -70,8 +70,9 @@ INI_CIMA:			li a7,31
 			li a1, 150		# som do passo
 			li a2, 121
 			li a3, 50
-			ecall		
-
+			ecall	
+				
+		li a0,4
 		la t0,INI_POS			# carrega em t0 o endereco de INI_POS
 		la t1,OLD_INI_POS		# carrega em t1 o endereco de OLD_INI_POS
 		lw t2,0(t0)
@@ -89,7 +90,8 @@ INI_BAIXO:			li a7,31
 			li a2, 121
 			li a3, 50
 			ecall
-		
+			
+		li a0,5
 		la t0,INI_POS			# carrega em t0 o endereco de INI_POS
 		la t1,OLD_INI_POS		# carrega em t1 o endereco de OLD_INI_POS
 		lw t2,0(t0)
@@ -113,11 +115,15 @@ INI_COLLIDEX:
 		add t5, t5, t4			# endere o do mapa + posi  o y real
 		lbu t4, (t5)			# t4 = byte da posi  o do personagem
 		
-		bnez t4, FIM			# se o byte n„o for 0 n„o pode andar, sai
+		li t6,3
+		beq t4,t6,DERROTA	
+		bnez t4, FIM			# se o byte n√£o for 0 n√£o pode andar, sai
 		
 		sh t1,0(t0)			# salva
-		mv s8, t1       # salva a posiÁ„o X em s8 do inimigo
-		j INIMIGO_JOGADOR
+		MOVE_INIMIGO_MATRIZ()
+		ret
+		#mv s8, t1       # salva a posi√ß√£o X em s8 do inimigo
+		#j INIMIGO_JOGADOR
 		
 INI_COLLIDEY:
 		mv t5, s4			# endere o do primeiro byte do mapa
@@ -132,19 +138,22 @@ INI_COLLIDEY:
 		add t5, t5, t4			# endere o do mapa + x	
 		lbu t4, (t5)			# t4 = byte da posi  o do personagem
 		
-		bnez t4, FIM			# se o byte n„o for 0 n„o pode andar, sai
-		
+		li t6,3
+		beq t4,t6,DERROTA
+		bnez t4, FIM			# se o byte n√£o for 0 n√£o pode andar, sai
+		MOVE_INIMIGO_MATRIZ()
 		sh t1,2(t0)			# salva
-		mv s9, t1       # salva a posiÁ„o Y em s9 do inimigo
-		j INIMIGO_JOGADOR
-		
-INIMIGO_JOGADOR:
-		beq s6, s8, CHECAY
-
 		ret
+		#mv s9, t1       # salva a posi√ß√£o Y em s9 do inimigo
+		#j INIMIGO_JOGADOR
 		
-		CHECAX:	beq s6,s8, DERROTA		
-		CHECAY:	beq s7,s9, DERROTA
+#INIMIGO_JOGADOR:
+		#beq s6, s8, CHECAY
+
+		#ret
+		
+		#CHECAX:	beq s6,s8, DERROTA		
+		#CHECAY:	beq s7,s9, DERROTA
 
 # s6 = x jogador, s7 = y jogador
 # s8 = x inimigo, s9 = y inimigo
